@@ -46,4 +46,18 @@ def prepro_like_morphlized(data):
     return results
 
 # 단어 사전 만드는 함수
-def 
+def load_vocabulary(path, vocab_path):
+    vocabulary_list = []
+
+    if not os.path.exists(vocab_path):
+        if (os.path.exists(path)):
+            df = pd.read_csv(path,encoding='utf-8')
+            question, answer = list(df['Q']),list(df['A'])
+            data = []
+            data.extend(question)
+            data.extend(answer)
+            # Tokenizing 
+            words = data_tokenizer(data)
+            words = list(set(words))
+            words[:0] = MARKER
+
