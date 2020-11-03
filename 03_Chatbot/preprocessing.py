@@ -61,12 +61,13 @@ def load_vocabulary(path, vocab_path):
             words = data_tokenizer(data)
             words = list(set(words))
             words[:0] = MARKER # 사전에 정의한 토큰을 단어 리스트 앞에 추가
-
+            # print(vocab_path)
         with open(vocab_path, 'w', encoding = 'utf-8') as vocabulary_file:
             for word in words:
                 vocabulary_file.write(word + '\n')
 
-
+    
+        
     with open(vocab_path, 'w', encoding='utf-8') as vocabulary_file:
         for line in vocabulary_file:
             vocabulary_list.append(line.strip())
