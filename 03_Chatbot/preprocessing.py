@@ -51,29 +51,32 @@ def load_vocabulary(path, vocab_path):
     # vocab path가 없고 -- 단어 사전파일이 없고
     if not os.path.exists(vocab_path):
         # Raw데이터를 불러와서 사전을 만든다.
-        if (os.path.exists(path)):
-            df = pd.read_csv(path,encoding='utf-8')
-            question, answer = list(df['Q']),list(df['A'])
-            data = []
-            data.extend(question)
-            data.extend(answer)
-            # Tokenizing 
-            words = data_tokenizer(data)
-            words = list(set(words))
-            words[:0] = MARKER # 사전에 정의한 토큰을 단어 리스트 앞에 추가
+        # if (os.path.exists(path)):
+        df = pd.read_csv(path,encoding='utf-8')
+        question, answer = list(df['Q']),list(df['A'])
+        data = []
+        data.extend(question)
+        data.extend(answer)
+        # Tokenizing 
+        words = data_tokenizer(data)
+        words = list(set(words))
+        words[:0] = MARKER # 사전에 정의한 토큰을 단어 리스트 앞에 추가
             # print(vocab_path)
+        # print(words)
         with open(vocab_path, 'w', encoding = 'utf-8') as vocabulary_file:
             for word in words:
+                # print(word)
                 vocabulary_file.write(word + '\n')
 
     
         
-    with open(vocab_path, 'w', encoding='utf-8') as vocabulary_file:
+    with open(vocab_path, 'r', encoding='utf-8') as vocabulary_file:
         for line in vocabulary_file:
+            # print(line)
             vocabulary_list.append(line.strip())
-
+    # print(vocabulary_list) 
     word2idx, idx2word = make_vocabulary(vocabulary_list)
-
+    
     return word2idx, idx2word, len(word2idx)
 
  
@@ -130,7 +133,7 @@ def dec_output_processing(value, dictionary):
         sequence_index += (MAX_SEQUNECE - len(sequence_index))*[dictionary[PAD]]
 
         sequences_output_index.append(sequence_index)
-    return np.asaarray(sequences_output_index), sequence_index
+    return np.asarray(sequences_output_index), sequence_index
 
 # 디코더 Target 값 전처리
 def dec_target_processing(value,dictionary):
@@ -149,13 +152,14 @@ def dec_target_processing(value,dictionary):
     return np.asarray(sequences_target_index)
 
 if __name__ == "__main__":
-    PATH = 'data/ChatBotData.csv'
-    VOCAB_PATH = 'data/vocabulary.txt'
+    PATH = 'data_in/ChatBotData.csv'
+    VOCAB_PATH = 'data_in/vocabulary.txt'
     # 데이터 부르기
     inputs, outputs = load_data(PATH)
     # 단어 사전 부르기
     # 토크나이저를 사용하여 처리하도록 변경하기
     char2idx, idx2char, vocab_size = load_vocabulary(PATH,VOCAB_PATH)
+    # print(char2idx)
 
     # encoder/decoder input /target
     index_inputs, input_seq_len = enc_processing(inputs, char2idx)
@@ -171,8 +175,9 @@ if __name__ == "__main__":
     data_configs['end_symbol'] = END
     data_configs['unk_symbol'] = UNK
 
-    DATA_IN_PATH = './data/'
+    DATA_IN_PATH = './data_in/'
     np.save(open(DATA_IN_PATH+'train_inputs.npy','wb'), index_inputs)
     np.save(open(DATA_IN_PATH+'train_outputs.npy','wb'), index_inputs)
     np.save(open(DATA_IN_PATH+'train_targets.npy','wb'), index_inputs)
+
     json.dump(data_configs, open(DATA_IN_PATH+'data_configs.json','w'))
