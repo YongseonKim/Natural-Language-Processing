@@ -108,7 +108,7 @@ def enc_processing(value, dictionary):
         # Padding 추가
         # "안녕"  → "안녕,<PAD>,<PAD>,<PAD>,<PAD>"
         
-        sequence_index += (MAX_SEQUNECE - len(sequences_input_index))*[dictionary[PAD]]
+        sequence_index += (MAX_SEQUNECE - len(sequence_index))*[dictionary[PAD]]
         
         sequences_input_index.append(sequence_index)
 
@@ -133,7 +133,7 @@ def dec_output_processing(value, dictionary):
         sequence_index += (MAX_SEQUNECE - len(sequence_index))*[dictionary[PAD]]
 
         sequences_output_index.append(sequence_index)
-    return np.asarray(sequences_output_index), sequence_index
+    return np.asarray(sequences_output_index), sequences_length
 
 # 디코더 Target 값 전처리
 def dec_target_processing(value,dictionary):
@@ -178,12 +178,11 @@ if __name__ == "__main__":
 
     DATA_IN_PATH = './data_in/'
     np.save(open(DATA_IN_PATH+'train_inputs.npy','wb'), index_inputs)
-    np.save(open(DATA_IN_PATH+'train_outputs.npy','wb'), index_inputs)
-    np.save(open(DATA_IN_PATH+'train_targets.npy','wb'), index_inputs)
+    np.save(open(DATA_IN_PATH+'train_outputs.npy','wb'), index_outputs)
+    np.save(open(DATA_IN_PATH+'train_targets.npy','wb'), index_targets)
 
     json.dump(data_configs, open(DATA_IN_PATH+'data_configs.json','w'))
 
-index_outputs.shape
-index_targets.shape
+# index_targets
 
 
