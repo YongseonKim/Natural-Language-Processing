@@ -142,6 +142,7 @@ def dec_target_processing(value,dictionary):
         sequence = re.sub(CHANGE_FILTER,"", sequence)
         sequence_index = [dictionary[word] for word in sequence.split() ]
         if len(sequence_index)>= MAX_SEQUNECE:
+            # 이부분이 Decoder 입력값 전처리와 다른점
             sequence_index = sequence_index[:MAX_SEQUNECE-1] + [dictionary[END]] #마지막에 END xhzms
         else :
             sequence_index += [dictionary[END]]
@@ -181,3 +182,8 @@ if __name__ == "__main__":
     np.save(open(DATA_IN_PATH+'train_targets.npy','wb'), index_inputs)
 
     json.dump(data_configs, open(DATA_IN_PATH+'data_configs.json','w'))
+
+index_outputs.shape
+index_targets.shape
+
+
